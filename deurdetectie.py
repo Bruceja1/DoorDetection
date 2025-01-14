@@ -1,11 +1,19 @@
+'''
+python -m venv .venv
+./.venv/Scripts/activate
+pip install -r requirements.txt
+'''
+
+# Werkt zowel met losse afbeeldingen als met video's
+# Kan later eventueel uitgebreid worden om live detection te doen met een camera:
+# https://docs.ultralytics.com/modes/predict/#introduction
 from ultralytics import YOLO
 import tkinter as tk 
 from tkinter import filedialog 
 
 yoloModel = "yolo11n.pt" # Dit model herkent deuren helaas niet
 
-# Kan later eventueel uitgebreid worden om live detection te doen met een camera:
-# https://docs.ultralytics.com/modes/predict/#introduction
+
 class ObjectDetection:
     def __init__(self):
         self.model = self.load_model()
@@ -35,6 +43,7 @@ class ObjectDetection:
 
         return imgPath
 
+# Window pop-up om een afbeelding te selecteren
 root = tk.Tk() 
 root.withdraw() 
 file_path = filedialog.askopenfilename() 
@@ -46,7 +55,7 @@ door_detection_results = door_detection.predict(file_path)
 door_detection.plot_bboxes(door_detection_results, file_path) # Coördinaten bounding boxes
 door_detection_results
 
-
+print("\n Open './runs/' om het resultaat te bekijken! \n")
 
 
 
