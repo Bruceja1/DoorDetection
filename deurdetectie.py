@@ -11,7 +11,7 @@ from ultralytics import YOLO
 import tkinter as tk 
 from tkinter import filedialog 
 
-yoloModel = "yolo11n.pt" # Dit model herkent deuren helaas niet
+yoloModel = "DoorModel-init.pt"
 
 
 class ObjectDetection:
