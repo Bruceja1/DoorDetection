@@ -1,7 +1,8 @@
 '''
-python -m venv .venv
-./.venv/Scripts/activate
-pip install -r requirements.txt
+Stap 1: python -m venv .venv
+Stap 2: ./.venv/Scripts/activate
+Stap 3: pip install -r requirements.txt
+Stap 4: Run het bestand
 '''
 
 # Werkt zowel met losse afbeeldingen als met video's
@@ -46,7 +47,7 @@ class ObjectDetection:
 # Window pop-up om een afbeelding te selecteren
 root = tk.Tk() 
 root.withdraw() 
-file_path = filedialog.askopenfilename() 
+file_path = filedialog.askopenfilename(initialdir='./data/') 
 
 door_detection = ObjectDetection()
 door_detection.load_model()
