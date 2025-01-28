@@ -13,6 +13,7 @@ import tkinter as tk
 from tkinter import filedialog 
 
 yoloModel = "DoorModel-init.pt"
+confidence_threshold = 0.5
 
 class ObjectDetection:
     def __init__(self):
@@ -48,8 +49,9 @@ class ObjectDetection:
                 class_ids.append(class_id)
 
                 if class_id == 0: 
-                    door_detected = True
-                    door_confidence = confidence
+                    if confidence > confidence_threshold:
+                        door_detected = True
+                        door_confidence = confidence
 
         return door_detected, door_confidence
 
