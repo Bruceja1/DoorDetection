@@ -14,7 +14,6 @@ from tkinter import filedialog
 
 yoloModel = "DoorModel-init.pt"
 
-
 class ObjectDetection:
     def __init__(self):
         self.model = self.load_model()
@@ -26,41 +25,52 @@ class ObjectDetection:
         return model
 
     def predict(self, imgPath):
-        results = self.model(imgPath, device='cpu', save=True, show=True)
+        results = self.model(imgPath, device='cpu', save=True, show=False)
 
         return results
 
     def plot_bboxes(self, results, imgPath):
         xyxys = []
-        confidences = []
+        door_confidence = 0
         class_ids = []
+        door_detected = False
 
         for result in results:
             boxes = result.boxes.cpu().numpy()
             # Coördinaten van de bounding boxes
-            xyxy = boxes.xyxy
+            for box in boxes:
+                xyxy = boxes.xyxy
+                confidence = box.conf 
+                class_id = box.cls 
 
-            print(boxes)
+                xyxys.append(xyxy)
+                #confidences.append(confidence)
+                class_ids.append(class_id)
 
-        return imgPath
+                if class_id == 0: 
+                    door_detected = True
+                    door_confidence = confidence
 
-# Window pop-up om een afbeelding te selecteren
-root = tk.Tk() 
-root.withdraw() 
-file_path = filedialog.askopenfilename(initialdir='./data/') 
+        return door_detected, door_confidence
 
-door_detection = ObjectDetection()
-door_detection.load_model()
-door_detection_results = door_detection.predict(file_path)
-
-door_detection.plot_bboxes(door_detection_results, file_path) # Coördinaten bounding boxes
-door_detection_results
-
-print("\n Open './runs/' om het resultaat te bekijken! \n")
-
-
-
-
+def process_image():
+    door_detection = ObjectDetection()
+    door_detection.load_model()
+    
+    while True:
+        # Window pop-up om een afbeelding te selecteren
+        root = tk.Tk() 
+        root.withdraw() 
+        file_path = filedialog.askopenfilename(initialdir='./data/') 
+        door_detection_results = door_detection.predict(file_path)
+        is_valid = door_detection.plot_bboxes(door_detection_results, file_path)
+        if is_valid[0]:
+            print(f'\nDeur succesvol gedetecteerd met confidence {is_valid[1]}\n')
+            break
+        else:
+            print('\nGeen deur gedetecteerd, maak een nieuwe foto!\n')
+        
+process_image()
 
 # Load a model
 #model = YOLO("yolo11n.yaml")  # build a new model from YAML
